@@ -1,0 +1,7 @@
+tmp/
+video/frames/
+video/list.txt
+*.log
+.DS_Store
+Thumbs.db
+__pycache__/
