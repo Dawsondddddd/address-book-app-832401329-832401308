@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Clink 通讯录 —— 支持收藏、多联系方式、Excel 导入导出的极简通讯录" />
+  <title>Clink · 通讯录</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- ================= 侧边栏 ================= -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo">C</div>
+        <div class="brand-text">
+          <strong>Clink</strong>
+          <span>通讯录</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="主导航">
+        <button class="nav-item is-active" data-view="all" type="button" title="全部联系人">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 19c.5-3.2 3-5 6.2-5s5.7 1.8 6.2 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.4c2.6.2 4.6 1.7 5.2 4.1"/></svg>
+          <span>全部联系人</span>
+          <em class="nav-count" id="navCountAll">0</em>
+        </button>
+        <button class="nav-item" data-view="favorite" type="button" title="收藏联系人">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 3.6l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.8l5.9-.9z"/></svg>
+          <span>收藏联系人</span>
+          <em class="nav-count" id="navCountFav">0</em>
+        </button>
+      </nav>
+
+      <div class="stats-card">
+        <div class="stats-title">通讯录概览</div>
+        <div class="stats-grid">
+          <div><b id="statContacts">0</b><span>联系人</span></div>
+          <div><b id="statMethods">0</b><span>联系方式</span></div>
+          <div><b id="statFav">0</b><span>已收藏</span></div>
+        </div>
+      </div>
+
+      <div class="side-actions">
+        <button class="side-btn" id="btnExport" type="button">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 3v11m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+          导出 Excel
+        </button>
+        <button class="side-btn" id="btnImport" type="button">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4l4 4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+          导入 Excel
+        </button>
+        <button class="side-btn side-btn--ghost" id="btnDemo" type="button">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 3l2.2 6.1L21 9.4l-5 4.5 1.3 6.6L12 17.4 6.7 20.5 8 13.9 3 9.4l6.8-.3z"/></svg>
+          载入示例数据
+        </button>
+      </div>
+
+      <div class="side-footer">
+        <span class="dot"></span> v1.0.0 · 软件工程极限编程
+      </div>
+    </aside>
+
+    <!-- ================= 主区域 ================= -->
+    <main class="main">
+      <header class="topbar">
+        <div class="title-wrap">
+          <h1 id="viewTitle">全部联系人</h1>
+          <p id="viewSub">管理你的每一段人脉</p>
+        </div>
+        <div class="top-actions">
+          <label class="search" for="searchInput">
+            <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="searchInput" type="search" autocomplete="off"
+                   placeholder="搜索姓名、公司、电话、微信…" />
+            <kbd>Ctrl K</kbd>
+          </label>
+          <button class="btn btn-primary" id="btnAdd" type="button">
+            <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            新建联系人
+          </button>
+        </div>
+      </header>
+
+      <section class="toolbar">
+        <div class="toolbar-info">
+          <span id="resultCount">共 0 位联系人</span>
+          <span class="sep">·</span>
+          <span id="methodCount">0 条联系方式</span>
+        </div>
+        <label class="sort">
+          排序
+          <select id="sortSelect">
+            <option value="updated">最近更新</option>
+            <option value="name">姓名 A→Z</option>
+            <option value="company">公司 A→Z</option>
+          </select>
+        </label>
+      </section>
+
+      <section class="grid" id="contactGrid" aria-live="polite"></section>
+
+      <section class="empty" id="emptyState" hidden>
+        <div class="empty-art">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5A2.5 2.5 0 016.5 4h11A2.5 2.5 0 0120 6.5v11a2.5 2.5 0 01-2.5 2.5h-11A2.5 2.5 0 014 17.5z"/><circle cx="12" cy="10.5" r="2.5"/><path d="M8 17c.6-2 2.2-3.2 4-3.2s3.4 1.2 4 3.2"/></svg>
+        </div>
+        <h2 id="emptyTitle">还没有联系人</h2>
+        <p id="emptyDesc">点击「新建联系人」手动添加，或从 Excel 批量导入。</p>
+        <div class="empty-actions">
+          <button class="btn btn-primary" id="btnAddEmpty" type="button">新建联系人</button>
+          <button class="btn btn-ghost" id="btnDemoEmpty" type="button">载入示例数据</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ================= 新建 / 编辑弹窗 ================= -->
+  <div class="modal" id="contactModal" hidden>
+    <div class="modal-mask" data-close="true"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-head">
+        <div>
+          <h2 id="modalTitle">新建联系人</h2>
+          <p>填写基础信息与多个联系方式，带 * 为必填项</p>
+        </div>
+        <button class="icon-btn" id="btnCloseModal" type="button" aria-label="关闭">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <form class="modal-body" id="contactForm" novalidate>
+        <input type="hidden" id="fieldId" />
+        <div class="form-grid">
+          <label class="field">
+            <span>姓名 <i>*</i></span>
+            <input id="fieldName" type="text" maxlength="24" placeholder="如：林晚晴" />
+            <em class="err" id="errName"></em>
+          </label>
+          <label class="field">
+            <span>公司 / 组织</span>
+            <input id="fieldCompany" type="text" maxlength="40" placeholder="如：字节跳动" />
+          </label>
+          <label class="field">
+            <span>职位</span>
+            <input id="fieldPosition" type="text" maxlength="30" placeholder="如：产品经理" />
+          </label>
+          <label class="field">
+            <span>备注</span>
+            <input id="fieldNotes" type="text" maxlength="80" placeholder="如：大学同学 / 常联系" />
+          </label>
+        </div>
+
+        <div class="methods-block">
+          <div class="methods-head">
+            <span>联系方式 <i>*</i> 至少填写一项</span>
+            <button class="btn btn-mini" id="btnAddMethod" type="button">
+              <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              添加一项
+            </button>
+          </div>
+          <div class="method-rows" id="methodRows"></div>
+          <em class="err" id="errMethods"></em>
+        </div>
+
+        <label class="checkline">
+          <input type="checkbox" id="fieldFavorite" />
+          <span>加入收藏（常用联系人置顶显示）</span>
+        </label>
+      </form>
+
+      <footer class="modal-foot">
+        <button class="btn btn-ghost" id="btnCancelModal" type="button">取消</button>
+        <button class="btn btn-primary" id="btnSave" type="button">保存联系人</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ================= 删除确认 ================= -->
+  <div class="modal" id="confirmModal" hidden>
+    <div class="modal-mask" data-close="true"></div>
+    <div class="modal-panel modal-panel--sm" role="alertdialog" aria-modal="true">
+      <div class="confirm-body">
+        <div class="confirm-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5m0 3.5h.01M10.3 3.9L2.6 17.3A2 2 0 004.3 20h15.4a2 2 0 001.7-2.7L13.7 3.9a2 2 0 00-3.4 0z"/></svg>
+        </div>
+        <h3>删除后不可恢复</h3>
+        <p id="confirmText">确定要删除该联系人吗？</p>
+      </div>
+      <footer class="modal-foot">
+        <button class="btn btn-ghost" id="btnCancelDelete" type="button">再想想</button>
+        <button class="btn btn-danger" id="btnConfirmDelete" type="button">确认删除</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ================= 导入结果 ================= -->
+  <div class="modal" id="importModal" hidden>
+    <div class="modal-mask" data-close="true"></div>
+    <div class="modal-panel" role="dialog" aria-modal="true">
+      <header class="modal-head">
+        <div>
+          <h2>导入结果</h2>
+          <p id="importFile">—</p>
+        </div>
+        <button class="icon-btn" id="btnCloseImport" type="button" aria-label="关闭">
+          <svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+      <div class="modal-body">
+        <div class="import-stats">
+          <div class="ok"><b id="importOk">0</b><span>成功导入</span></div>
+          <div class="skip"><b id="importSkip">0</b><span>重复跳过</span></div>
+          <div class="bad"><b id="importBad">0</b><span>格式异常</span></div>
+        </div>
+        <div class="import-log" id="importLog"></div>
+      </div>
+      <footer class="modal-foot">
+        <button class="btn btn-primary" id="btnImportDone" type="button">知道了</button>
+      </footer>
+    </div>
+  </div>
+
+  <input type="file" id="fileInput" accept=".xlsx,.csv" hidden />
+  <div class="toasts" id="toasts" aria-live="assertive"></div>
+
+  <script src="js/xlsx-lite.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
