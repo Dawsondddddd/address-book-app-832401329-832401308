@@ -1,4 +1,9 @@
-> 说明：本文为博客草稿。文中图片位于仓库 `shots/` 目录，发布到 CSDN 前需要逐张上传并替换为图床链接；演示视频位于 `video/clink-demo.mp4`，需先在 CSDN 上传视频后插入。文末附发布前检查清单。
+<!--
+发布说明（CSDN 渲染时不可见）：
+1. 文中图片位于仓库 shots/ 目录，发布时需上传到 CSDN 图床并替换为图床链接；
+2. 演示视频位于 video/clink-demo.mp4，需在 CSDN 上传视频后插入；
+3. 发布前确认 GitHub 仓库为 public，提交次数截图与正文一致。
+-->
 
 # 极限编程作业：从零实现一个支持收藏、多联系方式与 Excel 导入导出的通讯录
 
@@ -35,9 +40,9 @@
 
 | 类型 | 链接 |
 | --- | --- |
-| GitHub 仓库 | https://github.com/Dawsondddddd/address-book-app-832401329-832401308 |
-| 代码规范 | https://github.com/Dawsondddddd/address-book-app-832401329-832401308/blob/main/docs/CODE_STANDARDS.md |
-| 演示视频 | 见 5.8 节（仓库内 `video/clink-demo.mp4`） |
+| GitHub 仓库 | [github.com/Dawsondddddd/address-book-app-832401329-832401308](https://github.com/Dawsondddddd/address-book-app-832401329-832401308) |
+| 代码规范 | [docs/CODE_STANDARDS.md](https://github.com/Dawsondddddd/address-book-app-832401329-832401308/blob/main/docs/CODE_STANDARDS.md) |
+| 演示视频 | [clink-demo.mp4](https://github.com/Dawsondddddd/address-book-app-832401329-832401308/blob/main/video/clink-demo.mp4)（GitHub 页面可直接播放） |
 | 部署地址 | 未做云服务器部署，本地静态服务器运行（`python -m http.server 8765`） |
 
 项目为纯静态页面，**零第三方依赖**：克隆仓库后任意静态服务器即可运行，断网也能完整使用。
@@ -383,11 +388,9 @@ const FIELD_RULES = [
 
 ### 5.8 演示视频
 
-演示视频（约 21 秒）：`video/clink-demo.mp4`
+演示视频约 29 秒，已随仓库提交：[video/clink-demo.mp4](https://github.com/Dawsondddddd/address-book-app-832401329-832401308/blob/main/video/clink-demo.mp4)，GitHub 页面可直接播放。
 
-视频内容依次为：搜索联系人 → 收藏一位联系人 → 切到收藏视图 → 新建联系人并填写手机/邮箱/微信三种联系方式 → 保存 → 导出 Excel → 导入 Excel 并查看结果 → 打开新联系人详情 → 按姓名排序。
-
-> CSDN 发布时请先在编辑器里上传该视频，再把上方占位替换为视频。
+视频内容依次为：搜索联系人 → 收藏一位联系人 → 切到收藏视图 → 新建联系人并填写手机/邮箱/微信三种联系方式 → 编辑补充地址 → 导出 Excel → 导入 Excel 并查看结果 → 按姓名排序。
 
 ---
 
@@ -482,10 +485,11 @@ const FIELD_RULES = [
 
 ---
 
-### 发布前检查清单
-
-- [ ] 把 `shots/` 下 9 张图片逐张上传到 CSDN，替换文中的相对路径
-- [ ] 上传 `video/clink-demo.mp4`，替换 5.8 节的视频占位
-- [ ] 确认 GitHub 仓库地址与代码规范链接可访问（仓库需为 public）
-- [ ] 确认提交次数截图与正文表格一致
+<!--
+发布前检查清单：
+- [ ] 9 张截图已上传并替换为图床链接
+- [ ] 演示视频已上传并插入
+- [ ] GitHub 仓库地址、代码规范链接可公开访问
+- [ ] 提交次数截图与正文表格一致
 - [ ] 发布后回到作业帖提交博客链接
+-->
